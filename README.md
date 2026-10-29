@@ -12,7 +12,7 @@ Eventia est une maquette d’interface pour découvrir des événements au Béni
 
 **Déjà réalisé :** squelette Laravel indépendant, mise en page Blade partagée, accueil avec filtres de prévisualisation, détail, gestion, formulaires d’administration, page des inscriptions, feuille CSS responsive, routes temporaires de lecture pour prévisualiser les vues et exemples isolés dans `app/Support/EventiaPreview.php`.
 
-**À réaliser par l’équipe :** backend métier complet. Il n’y a pas encore de modèles Event/Registration, de migrations métier, de persistance des inscriptions, de règles de disponibilité ou d’annulation, d’autorisations ni de tests métier. Les formulaires sont des maquettes et leurs boutons indiquent qu’ils n’enregistrent aucune action.
+**À réaliser par l’équipe :** backend métier complet. Il n’y a pas encore de modèles Event/Registration, de migrations métier, de persistance des inscriptions, de règles de disponibilité ou d’annulation, d’autorisations ni de tests métier. Les formulaires utilisent des routes web provisoires protégées par CSRF ; elles affichent seulement un message de démonstration et n’enregistrent aucune action.
 
 ## Technologies et prérequis
 
@@ -56,7 +56,7 @@ La page charge le style depuis `public/css/eventia.css`. Pour utiliser le pipeli
 | `resources/views/registrations/index.blade.php` | Suivi des inscriptions | Participant, événement, date et statut |
 | `resources/views/layouts/app.blade.php` | Layout commun | Messages flash et erreurs éventuelles |
 
-Les jeux de données provisoires sont regroupés dans `app/Support/EventiaPreview.php`. Les routes de prévisualisation se trouvent dans `routes/web.php` ; elles filtrent uniquement un tableau en mémoire et ne traitent aucune écriture. Remplacez-les par vos contrôleurs quand le backend sera prêt.
+Les jeux de données provisoires sont regroupés dans `app/Support/EventiaPreview.php`. Les routes de prévisualisation se trouvent dans `routes/web.php` ; elles filtrent uniquement un tableau en mémoire, et les routes POST/PUT/DELETE/PATCH affichent un message sans traiter ni enregistrer les données reçues. Remplacez-les par vos contrôleurs quand le backend sera prêt.
 
 ## Guide pour poursuivre le backend
 

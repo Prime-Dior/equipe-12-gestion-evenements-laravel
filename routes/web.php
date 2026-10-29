@@ -24,9 +24,15 @@ Route::get('/evenements/{event}', function (int $event) {
     return view('events.show', compact('event'));
 })->name('events.show');
 
+Route::post('/evenements/{event}/inscriptions', fn () => back()->with('info', 'Maquette uniquement : aucune inscription n’a été enregistrée.'))
+    ->name('registrations.store');
+
 Route::prefix('organisateur/evenements')->name('admin.events.')->group(function () {
     Route::get('/', fn () => view('admin.events.index', ['events' => EventiaPreview::events()]))->name('index');
     Route::get('/creation', fn () => view('admin.events.form'))->name('create');
+    Route::post('/', fn () => back()->with('info', 'Maquette uniquement : aucun événement n’a été créé.'))->name('store');
+    Route::put('/{event}', fn () => back()->with('info', 'Maquette uniquement : aucune modification n’a été enregistrée.'))->name('update');
+    Route::delete('/{event}', fn () => back()->with('info', 'Maquette uniquement : aucun événement n’a été supprimé.'))->name('destroy');
     Route::get('/{event}/modification', function (int $event) {
         $event = collect(EventiaPreview::events())->firstWhere('id', $event);
         abort_if(!$event, 404);
@@ -37,3 +43,6 @@ Route::prefix('organisateur/evenements')->name('admin.events.')->group(function 
 
 Route::get('/inscriptions', fn () => view('registrations.index', ['registrations' => EventiaPreview::registrations()]))
     ->name('registrations.index');
+
+Route::patch('/inscriptions/{registration}', fn () => back()->with('info', 'Maquette uniquement : aucune inscription n’a été annulée.'))
+    ->name('registrations.cancel');

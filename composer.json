@@ -2,7 +2,7 @@
     "$schema":  "https://getcomposer.org/schema.json",
     "name":  "eventia/evenements-inscriptions",
     "type":  "project",
-    "description":  "Interface Eventia pour la gestion des événements et inscriptions — IFRI-UAC, équipe 12.",
+    "description":  "Eventia interface for event management and registration - IFRI-UAC, team 12.",
     "keywords":  [
                      "laravel",
                      "framework"
@@ -77,7 +77,7 @@
                               }
               },
     "config":  {
-                   "optimize-autoloader":  true,
+                   "optimize-autoloader":  false,
                    "preferred-install":  "dist",
                    "sort-packages":  true,
                    "allow-plugins":  {
