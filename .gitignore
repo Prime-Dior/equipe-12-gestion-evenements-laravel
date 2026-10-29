@@ -1,0 +1,26 @@
+﻿/vendor
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/bootstrap/cache/*.php
+.env
+.env.*
+!.env.example
+/auth.json
+/.idea
+/.vscode
+/.phpunit.cache
+/.phpunit.result.cache
+*.log
+.DS_Store
+Thumbs.db
+Homestead.json
+Homestead.yaml
+
+# Guides de génération propres à l'environnement local
+/AGENTS.md
+/CLAUDE.md
+
