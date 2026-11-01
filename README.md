@@ -1,22 +1,31 @@
-﻿# Eventia — événements et inscriptions
+# Eventia
 
-Projet universitaire Laravel du cours **Projet d’initiation aux frameworks**, IFRI-UAC, GL3, année académique 2026-2027. Équipe 12, sujet B : **gestion des événements et des inscriptions**.
+Application Laravel de gestion d’événements et d’inscriptions, réalisée dans le cadre du cours **Projet d’initiation aux frameworks** à l’IFRI-UAC (GL3, année 2026-2027), équipe 12.
 
 - **Enseignante :** GAHOU Maryse
 - **Membres :** Afwane SOULEYMANE et Primael KPATINDE
-- **Date limite annoncée :** lundi 2 novembre 2026 à 23 h 59 (heure du Bénin)
+- **Sujet B :** Gestion des événements et inscriptions
+- **Échéance :** 2 novembre 2026 à 23 h 59, heure du Bénin
 
-## Présentation et état du projet
+## État actuel
 
-Eventia est une maquette d’interface pour découvrir des événements au Bénin et préparer leur gestion. Cette étape réalise le frontend Blade et ses styles. Les contenus visibles sont des données d’exemple en mémoire ; ils ne viennent pas d’une base de données.
+Le travail de cette branche (`feature/events-admin`) couvre la partie **catégories et événements** attribuée au membre A : modèles, migrations, recherche et filtres backend, pages publiques, CRUD des événements, autorisation par rôle, données de démonstration et tests.
 
-**Déjà réalisé :** squelette Laravel indépendant, mise en page Blade partagée, accueil avec filtres de prévisualisation, détail, gestion, formulaires d’administration, page des inscriptions, feuille CSS responsive, routes temporaires de lecture pour prévisualiser les vues et exemples isolés dans `app/Support/EventiaPreview.php`.
+La branche ne contient pas le module du membre B : connexion/inscription aux comptes, modèle et migration `Registration`, inscriptions des participants et annulations. Les pages de connexion et d’inscription restent à intégrer par le membre B. La page de détail indique clairement que le formulaire participant sera relié à ce module. Aucun paiement ni courriel réel n’est prévu.
 
-**À réaliser par l’équipe :** backend métier complet. Il n’y a pas encore de modèles Event/Registration, de migrations métier, de persistance des inscriptions, de règles de disponibilité ou d’annulation, d’autorisations ni de tests métier. Les formulaires utilisent des routes web provisoires protégées par CSRF ; elles affichent seulement un message de démonstration et n’enregistrent aucune action.
+## Fonctionnalités de cette branche
+
+- Liste des événements à venir, avec recherche par titre et filtres catégorie/date côté serveur.
+- Pagination qui conserve les filtres.
+- Détail d’un événement et affichage des places restantes, calculées depuis les inscriptions si leur table existe.
+- Création, modification et suppression protégées des événements.
+- Protection de l’administration par authentification et autorisation `manage-events` (rôle `admin`).
+- Validation des données et refus de diminuer la capacité sous le nombre d’inscriptions ou de supprimer un événement déjà inscrit.
+- Catégories et événements de démonstration reproductibles.
 
 ## Technologies et prérequis
 
-PHP 8.4, Laravel 13, Composer, Blade, HTML, CSS, MySQL 8, Git, Node.js et npm. PHP doit inclure `pdo_mysql`, `mbstring`, `openssl` et `fileinfo`. **SQLite est exclu.**
+Laravel 13, PHP 8.4, Blade, MySQL 8, Composer et Git. L’extension PHP `pdo_mysql` est nécessaire. Node.js/npm ne sont pas nécessaires pour les pages actuelles : le layout sert directement `public/css/eventia.css`. **SQLite est interdit pour ce projet.**
 
 ## Installation locale
 
@@ -29,7 +38,7 @@ Copy-Item .env.example .env
 php artisan key:generate
 ```
 
-Créez une base MySQL vide appelée `eventia`, puis réglez les paramètres du fichier `.env` :
+Créez une base MySQL locale, par exemple `eventia`, puis réglez les variables de connexion dans `.env` :
 
 ```dotenv
 DB_CONNECTION=mysql
@@ -40,59 +49,53 @@ DB_USERNAME=votre_utilisateur
 DB_PASSWORD=votre_mot_de_passe
 ```
 
-Utilisez un compte MySQL local approprié et ne publiez jamais son mot de passe. Les migrations métier ne sont pas encore écrites. Après les avoir créées, lancez `php artisan migrate`, puis `php artisan serve`.
+Ne partagez et ne commitez jamais le fichier `.env`. Une fois le module de comptes du membre B intégré, lancez les migrations et les données d’exemple :
 
-La page charge le style depuis `public/css/eventia.css`. Pour utiliser le pipeline standard du squelette Laravel, installez les dépendances JavaScript puis lancez `npm install` et `npm run dev`. La source est `resources/css/eventia.css` ; gardez une seule version de la feuille de style quand vous relierez Vite.
+```powershell
+php artisan migrate
+php artisan db:seed --class=EventiaSeeder
+```
 
-## Vues et données attendues
+Le seeder crée des catégories et événements de démonstration sans doublonner les événements lors de ses exécutions successives. Les migrations du module B devront également être présentes avant `migrate` si elles sont nécessaires au schéma commun.
 
-| Vue | Rôle | Données à brancher |
-| --- | --- | --- |
-| `resources/views/welcome.blade.php` | Accueil et filtres | Événements paginés et catégories |
-| `resources/views/components/event-card.blade.php` | Carte réutilisable | Titre, catégorie, date, lieu, places restantes |
-| `resources/views/events/show.blade.php` | Détail et inscription | Événement, disponibilité et description |
-| `resources/views/admin/events/index.blade.php` | Tableau de gestion | Événements et nombre d’inscriptions actives |
-| `resources/views/admin/events/form.blade.php` | Création/modification | Événement facultatif, ancienne saisie et erreurs |
-| `resources/views/registrations/index.blade.php` | Suivi des inscriptions | Participant, événement, date et statut |
-| `resources/views/layouts/app.blade.php` | Layout commun | Messages flash et erreurs éventuelles |
+Lancez le serveur Laravel :
 
-Les jeux de données provisoires sont regroupés dans `app/Support/EventiaPreview.php`. Les routes de prévisualisation se trouvent dans `routes/web.php` ; elles filtrent uniquement un tableau en mémoire, et les routes POST/PUT/DELETE/PATCH affichent un message sans traiter ni enregistrer les données reçues. Remplacez-les par vos contrôleurs quand le backend sera prêt.
+```powershell
+php artisan serve
+```
 
-## Guide pour poursuivre le backend
+Ouvrez l’adresse indiquée par `artisan serve` (habituellement `http://127.0.0.1:8000`). La feuille `resources/css/eventia.css` est conservée comme source miroir du fichier public ; les pages actuelles chargent la copie `public/css/eventia.css`, donc Vite n’est pas requis pour les visualiser.
 
-### Modèles et migrations à concevoir
+## Tests
 
-Commencez par `Event` (titre, catégorie, description, date/heure, lieu, capacité) et `Registration` (événement, nom, courriel, statut ou date d’annulation). Définissez `Event hasMany Registration` et `Registration belongsTo Event`. Ajoutez les clés étrangères et index nécessaires. Calculez les places restantes depuis les inscriptions actives, sans enregistrer un compteur qui pourrait devenir incohérent.
+Les tests de cette branche utilisent une base **MySQL distincte** nommée `eventia_testing`, configurée dans `phpunit.xml`. Créez cette base vide avec les droits de l’utilisateur MySQL de test avant de lancer :
 
-### Contrôleurs à écrire
+```powershell
+php artisan test
+```
 
-- `EventController` : liste, recherche et filtres validés, page de détail.
-- `RegistrationController` : inscription et annulation contrôlée.
-- `Admin/EventController` : liste, création, modification et suppression protégée.
+Les tests exécutés sur cette branche couvrent la consultation, les filtres, le détail et les erreurs 404, la protection de l’administration, le CRUD et les validations. Ils ne couvrent pas les inscriptions participant : ce périmètre est confié au membre B.
 
-### Routes à relier aux formulaires
+## Organisation du code réalisé par le membre A
 
-- `GET /` avec `q`, `category` et `date` ; `GET /evenements/{event}`.
-- `POST /evenements/{event}/inscriptions`.
-- `GET /admin/evenements`, `GET /admin/evenements/create`, `POST /admin/evenements`.
-- `GET /admin/evenements/{event}/edit`, `PUT /admin/evenements/{event}`, `DELETE /admin/evenements/{event}`.
-- `GET /admin/inscriptions` et une route d’annulation autorisée.
+- `routes/web.php` : routes publiques et routes d’administration protégées.
+- `app/Http/Controllers/EventController.php` : recherche, détail et opérations d’administration.
+- `app/Models/Category.php`, `app/Models/Event.php` : attributs et relations Eloquent.
+- `database/migrations/` : rôle utilisateur, catégories et événements.
+- `database/factories/`, `database/seeders/` : données cohérentes pour les tests et démonstrations.
+- `resources/views/events/`, `resources/views/admin/events/`, `resources/views/components/` : pages Blade publiques et d’administration.
+- `tests/Feature/EventsManagementTest.php` : tests HTTP et règles vérifiées pour le module événements.
 
-Ajoutez `@csrf`, les directives `@method` nécessaires, les validateurs Laravel et des messages compréhensibles. Il faudra refuser les inscriptions aux événements passés ou complets, prévenir les doublons, traiter la capacité dans une transaction avec verrouillage MySQL et définir qui peut annuler une inscription. Conservez les filtres dans les liens de pagination. Écrivez ensuite des tests de fonctionnalités couvrant ces règles et les accès administratifs.
+## Suite du développement par l’équipe
 
-## Démonstration
+Le membre B peut intégrer Fortify ou le mécanisme d’authentification choisi, puis concevoir `Registration`, sa migration, ses relations et son contrôleur. Il faudra ensuite relier le formulaire d’inscription sur `events/show.blade.php` et les pages d’inscriptions aux nouvelles routes. Les règles de doublons, d’annulation et de capacité simultanée doivent être validées côté serveur et couvertes par des tests. Le contrôle de capacité dans cette branche est informatif ; l’inscription transactionnelle et son verrouillage restent à implémenter avec le module B.
 
-Un parcours réaliste de 5 à 7 minutes se trouve dans [DEMONSTRATION.md](DEMONSTRATION.md). Les exemples de modification directe portent sur le texte d’accueil ou le jeu de données fictif ; ils ne simulent pas un changement en base.
+La migration `add_role_to_users_table` est utilisée par l’autorisation admin de cette branche ; coordonnez son intégration avec le membre B pour ne pas créer une migration concurrente du même champ.
 
-## Limites connues
+## Démonstration et documentation
 
-- Le squelette a été créé, mais Composer n’a pas encore terminé l’installation et la génération de `vendor/autoload.php` dans cet environnement. Lancer `composer install` sur une configuration réseau Composer fonctionnelle avant `php artisan`.
-- Aucun test n’a été exécuté ; les tests métier restent à écrire.
-- La base `eventia`, ses migrations et sa persistance restent à mettre en place.
-- Les dates des événements de démonstration sont relatives au jour de prévisualisation et ne constituent pas un calendrier confirmé.
-- Les polices web distantes sont facultatives ; une police système sert de remplacement.
-- L’accès GitHub de `Prime-Dior` doit être réauthentifié avant la création et la publication du dépôt.
+Consultez [DEMONSTRATION.md](DEMONSTRATION.md) pour le parcours oral et les notions Laravel à expliquer. Cette documentation décrit les responsabilités prévues ; elle ne prétend pas que les éléments du membre B sont déjà réalisés.
 
-## Contributions
+## Configuration Git d’équipe
 
-La répartition sera décidée et consignée par l’équipe au fil du travail réellement accompli. Ne présentez pas cette maquette comme un historique de contributions ni comme un backend terminé.
+Le travail du membre A est isolé sur `feature/events-admin`, créé après synchronisation de `main`. La branche doit être publiée puis intégrée par Pull Request selon le guide de l’équipe. Ne poussez pas directement sur `main` et ne forcez pas de push.
