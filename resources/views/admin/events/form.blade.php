@@ -4,7 +4,7 @@
 @section('content')
 <section class="admin-form-page">
     <a class="back-link" href="{{ route('admin.events.index') }}"><span aria-hidden="true">←</span> Administration</a>
-    <div class="form-heading"><p class="eyebrow">ESPACE ADMINISTRATEUR</p><h1>{{ $event->exists ? 'Modifier l’événement' : 'Créer un événement' }}</h1><p>Renseignez les informations pratiques de la rencontre.</p></div>
+    <div class="form-heading"><p class="eyebrow">Administration</p><h1>{{ $event->exists ? 'Modifier l’événement' : 'Créer un événement' }}</h1><p>Renseignez les informations pratiques.</p></div>
     <form class="event-form" method="POST" action="{{ $event->exists ? route('admin.events.update', $event) : route('admin.events.store') }}">
         @csrf
         @if($event->exists) @method('PUT') @endif

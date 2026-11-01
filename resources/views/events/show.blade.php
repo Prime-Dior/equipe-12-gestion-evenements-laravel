@@ -6,14 +6,6 @@
 <div class="detail-wrap">
     <a class="back-link" href="{{ route('events.index') }}"><span aria-hidden="true">←</span> Tous les événements</a>
 
-    @if (session('success'))
-        <p role="status">{{ session('success') }}</p>
-    @endif
-
-    @if (session('error'))
-        <p role="alert">{{ session('error') }}</p>
-    @endif
-
     <div class="detail-grid">
         <article class="detail-main">
             <div class="event-art detail-art event-art-coral">
@@ -44,8 +36,8 @@
                 </div>
             </div>
             <section class="about-event">
-                <h2>Informations pratiques</h2>
-                <p>Capacité : {{ $event->capacity }} places. Il reste actuellement {{ $event->places_remaining }} place(s).</p>
+                <h2>À propos</h2>
+                <p>Capacité de l’événement : {{ $event->capacity }} personnes.</p>
             </section>
         </article>
 
@@ -61,7 +53,7 @@
                 <h2>Vous êtes inscrit</h2>
                 <p class="places-note">Votre place pour cet événement est réservée.</p>
             @else
-                <h2>Une place<br>vous attend.</h2>
+                <h2>Participer</h2>
                 <p class="places-note"><span class="availability-dot"></span>{{ $event->places_remaining }} place(s) restante(s)</p>
                 @auth
                     <form action="{{ route('registrations.store', $event) }}" method="POST">

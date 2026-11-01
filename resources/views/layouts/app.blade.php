@@ -29,7 +29,6 @@
             </form>
         @endauth
     </nav>
-    <a class="header-cta" href="{{ route('events.index') }}">Explorer les événements <span aria-hidden="true">↗</span></a>
 </header>
 <main id="contenu">
     @if(session('success'))<div class="flash flash-success" role="status">{{ session('success') }}</div>@endif

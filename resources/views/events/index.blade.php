@@ -5,30 +5,21 @@
 @section('content')
 <section class="hero">
     <div class="hero-copy">
-        <p class="eyebrow">LES RENCONTRES QUI NOUS RASSEMBLENT</p>
-        <h1>Le prochain bon moment<br>commence ici.</h1>
-        <p>Ateliers, conférences et rendez-vous culturels au Bénin. Trouvez une rencontre qui vous ressemble.</p>
-        <a class="button button-light" href="#evenements">Découvrir les événements <span aria-hidden="true">↓</span></a>
+        <p class="eyebrow">Événements au Bénin</p>
+        <h1>Des rencontres<br>à vivre ensemble.</h1>
+        <p>Parcourez les prochains ateliers, conférences et rendez-vous culturels.</p>
+        <a class="button button-light" href="#evenements">Voir les événements <span aria-hidden="true">↓</span></a>
     </div>
-    <div class="hero-note"><span class="hero-note-mark">E.</span><span>Les idées prennent vie<br>quand on se rencontre.</span></div>
 </section>
 
 <section class="content-section" id="evenements">
     <div class="section-heading">
         <div>
-            <p class="eyebrow">LE CALENDRIER</p>
-            <h2>À ne pas manquer</h2>
+            <p class="eyebrow">Calendrier</p>
+            <h2>Événements à venir</h2>
         </div>
-        <p class="section-intro">Des expériences à partager, près de chez vous.</p>
+        <p class="section-intro">Trouvez votre prochain rendez-vous.</p>
     </div>
-
-    @if (session('success'))
-        <p role="status">{{ session('success') }}</p>
-    @endif
-
-    @if (session('error'))
-        <p role="alert">{{ session('error') }}</p>
-    @endif
 
     <form class="filter-bar" method="GET" action="{{ route('events.index') }}">
         <label class="search-field">
@@ -58,7 +49,7 @@
         <div class="empty-state">
             <span class="empty-mark">✳</span>
             <h3>Aucun événement trouvé</h3>
-            <p>Modifiez vos filtres ou revenez bientôt pour découvrir les prochains rendez-vous.</p>
+            <p>Essayez d’autres filtres ou revenez bientôt pour les prochains rendez-vous.</p>
         </div>
     @else
         <div class="event-grid">

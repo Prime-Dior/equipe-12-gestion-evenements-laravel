@@ -5,31 +5,34 @@
 
 @section('content')
 <section class="content-section">
-    <p class="eyebrow">MON ESPACE</p>
-    <h1>Mes inscriptions</h1>
+    <p class="eyebrow">Mon espace</p>
+    <div class="section-heading">
+        <div><h2>Mes inscriptions</h2></div>
+        <p class="section-intro">Les événements auxquels vous participez.</p>
+    </div>
 
-    @if (session('success'))
-        <p role="status">{{ session('success') }}</p>
+    @if ($registrations->isEmpty())
+        <div class="registration-empty">
+            <p>Vous n’avez pas encore d’inscription.</p>
+            <a class="button" href="{{ route('events.index') }}">Parcourir les événements</a>
+        </div>
+    @else
+        <div class="registration-list">
+            @foreach ($registrations as $registration)
+                <article class="registration-card">
+                    <div>
+                        <h2><a href="{{ route('events.show', $registration->event) }}">{{ $registration->event->title }}</a></h2>
+                        <p>{{ $registration->event->date->translatedFormat('d F Y · H:i') }}</p>
+                        <p>{{ $registration->event->location }}</p>
+                    </div>
+                    <form method="POST" action="{{ route('registrations.destroy', $registration) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button class="button button-outline" type="submit">Annuler</button>
+                    </form>
+                </article>
+            @endforeach
+        </div>
     @endif
-
-    @if (session('error'))
-        <p role="alert">{{ session('error') }}</p>
-    @endif
-
-    @forelse ($registrations as $registration)
-        <article class="event-card" style="margin-top: 16px; padding: 20px;">
-            <h2>{{ $registration->event->title }}</h2>
-            <p>{{ $registration->event->date->format('d/m/Y à H:i') }}</p>
-            <p>{{ $registration->event->location }}</p>
-
-            <form method="POST" action="{{ route('registrations.destroy', $registration) }}">
-                @csrf
-                @method('DELETE')
-                <button class="button button-outline" type="submit">Annuler mon inscription</button>
-            </form>
-        </article>
-    @empty
-        <p>Vous n’êtes inscrit à aucun événement pour le moment.</p>
-    @endforelse
 </section>
 @endsection

@@ -4,16 +4,16 @@
 
 @section('content')
 <div class="auth-heading">
-    <p class="eyebrow">REJOIGNEZ EVENTIA</p>
+    <p class="eyebrow">Nouveau compte</p>
     <h2>Créer un compte</h2>
-    <p>Inscrivez-vous pour réserver votre place aux événements.</p>
+    <p>Créez un compte pour vous inscrire aux événements.</p>
 </div>
 
 <form class="auth-form" method="POST" action="{{ route('register.store') }}">
     @csrf
 
     <div class="auth-field">
-        <label for="name">Nom</label>
+        <label for="name">Nom complet</label>
         <input id="name" name="name" value="{{ old('name') }}" autocomplete="name" required maxlength="100" autofocus>
         @error('name')
             <p class="auth-field-error">{{ $message }}</p>

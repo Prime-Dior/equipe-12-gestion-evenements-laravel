@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="auth-heading">
-    <p class="eyebrow">HEUREUX DE VOUS REVOIR</p>
+    <p class="eyebrow">Votre compte</p>
     <h2>Connexion</h2>
-    <p>Connectez-vous pour retrouver vos événements et inscriptions.</p>
+    <p>Connectez-vous pour gérer vos inscriptions.</p>
 </div>
 
 <form class="auth-form" method="POST" action="{{ route('login.store') }}">
