@@ -1,5 +1,7 @@
 @extends('layouts.app')
+
 @section('title', 'Événements à venir')
+
 @section('content')
 <section class="hero">
     <div class="hero-copy">
@@ -10,18 +12,60 @@
     </div>
     <div class="hero-note"><span class="hero-note-mark">E.</span><span>Les idées prennent vie<br>quand on se rencontre.</span></div>
 </section>
+
 <section class="content-section" id="evenements">
-    <div class="section-heading"><div><p class="eyebrow">LE CALENDRIER</p><h2>À ne pas manquer</h2></div><p class="section-intro">Des expériences à partager, près de chez vous.</p></div>
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">LE CALENDRIER</p>
+            <h2>À ne pas manquer</h2>
+        </div>
+        <p class="section-intro">Des expériences à partager, près de chez vous.</p>
+    </div>
+
+    @if (session('success'))
+        <p role="status">{{ session('success') }}</p>
+    @endif
+
+    @if (session('error'))
+        <p role="alert">{{ session('error') }}</p>
+    @endif
+
     <form class="filter-bar" method="GET" action="{{ route('events.index') }}">
-        <label class="search-field"><span class="sr-only">Rechercher par titre</span><span aria-hidden="true">⌕</span><input type="search" name="q" value="{{ $filters['q'] ?? '' }}" placeholder="Quel événement recherchez-vous ?"></label>
-        <label><span class="sr-only">Filtrer par catégorie</span><select name="category"><option value="">Toutes les catégories</option>@foreach($categories as $category)<option value="{{ $category->id }}" @selected((string) ($filters['category'] ?? '') === (string) $category->id)>{{ $category->name }}</option>@endforeach</select></label>
-        <label><span class="sr-only">Filtrer par date</span><input type="date" name="date" value="{{ $filters['date'] ?? '' }}"></label>
+        <label class="search-field">
+            <span class="sr-only">Rechercher par titre</span>
+            <span aria-hidden="true">⌕</span>
+            <input type="search" name="q" value="{{ $filters['q'] ?? '' }}" placeholder="Quel événement recherchez-vous ?">
+        </label>
+        <label>
+            <span class="sr-only">Filtrer par catégorie</span>
+            <select name="category">
+                <option value="">Toutes les catégories</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}" @selected((string) ($filters['category'] ?? '') === (string) $category->id)>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+        </label>
+        <label>
+            <span class="sr-only">Filtrer par date</span>
+            <input type="date" name="date" value="{{ $filters['date'] ?? '' }}">
+        </label>
         <button class="button" type="submit">Rechercher</button>
     </form>
-    @if($events->isEmpty())
-        <div class="empty-state"><span class="empty-mark">✳</span><h3>Aucun événement trouvé</h3><p>Modifiez vos filtres ou revenez bientôt pour découvrir les prochains rendez-vous.</p></div>
+
+    @if ($events->isEmpty())
+        <div class="empty-state">
+            <span class="empty-mark">✳</span>
+            <h3>Aucun événement trouvé</h3>
+            <p>Modifiez vos filtres ou revenez bientôt pour découvrir les prochains rendez-vous.</p>
+        </div>
     @else
-        <div class="event-grid">@foreach($events as $event)@include('components.event-card', ['event' => $event])@endforeach</div>
+        <div class="event-grid">
+            @foreach ($events as $event)
+                @include('components.event-card', ['event' => $event])
+            @endforeach
+        </div>
         <div class="pagination">{{ $events->links() }}</div>
     @endif
 </section>

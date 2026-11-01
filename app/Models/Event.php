@@ -24,7 +24,10 @@ class Event extends Model
 
     protected function casts(): array
     {
-        return ['date' => 'datetime', 'capacity' => 'integer'];
+        return [
+            'date' => 'datetime',
+            'capacity' => 'integer',
+        ];
     }
 
     public function category(): BelongsTo
@@ -32,7 +35,6 @@ class Event extends Model
         return $this->belongsTo(Category::class);
     }
 
-    /** La table registrations sera ajoutée par le membre B. */
     public function registrations(): HasMany
     {
         return $this->hasMany(Registration::class);

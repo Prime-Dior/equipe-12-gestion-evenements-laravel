@@ -44,7 +44,12 @@ class EventController extends Controller
         $this->includeRegistrationCount($query);
         $event = $query->findOrFail($event->id);
 
-        return view('events.show', compact('event'));
+        $registrationsCount = $event->registrations_count
+            ?? $event->registrations()->count();
+        $isRegistered = auth()->check()
+            && $event->registrations()->where('user_id', auth()->id())->exists();
+
+        return view('events.show', compact('event', 'registrationsCount', 'isRegistered'));
     }
 
     public function adminIndex(): View

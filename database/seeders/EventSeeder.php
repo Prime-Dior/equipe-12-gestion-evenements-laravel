@@ -10,6 +10,8 @@ class EventSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(CategorySeeder::class);
+
         $examples = [
             [
                 'title' => 'Les voix du futur',
