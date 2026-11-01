@@ -5,7 +5,7 @@
 @section('content')
 <h2>Se connecter</h2>
 
-<form method="POST" action="{{ route('login') }}">
+<form method="POST" action="{{ route('login.store') }}">
     @csrf
 
     <label for="email">Adresse e-mail</label>
