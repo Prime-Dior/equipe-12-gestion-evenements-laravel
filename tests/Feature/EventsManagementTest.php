@@ -60,6 +60,25 @@ class EventsManagementTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_navigation_changes_for_authenticated_users(): void
+    {
+        $this->get(route('events.index'))
+            ->assertOk()
+            ->assertSee('Créer un compte');
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get(route('registrations.index'))
+            ->assertOk();
+
+        $this->get(route('events.index'))
+            ->assertOk()
+            ->assertSee('Mes inscriptions')
+            ->assertSee('Déconnexion')
+            ->assertDontSee('Créer un compte');
+    }
+
     public function test_admin_can_create_update_and_delete_an_event(): void
     {
         $admin = User::factory()->create();

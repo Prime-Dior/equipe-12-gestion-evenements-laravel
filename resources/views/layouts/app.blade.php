@@ -14,9 +14,19 @@
     <a class="brand" href="{{ route('events.index') }}" aria-label="Eventia, accueil"><span class="brand-mark">e</span>eventia<span class="brand-period">.</span></a>
     <nav class="main-nav" aria-label="Navigation principale">
         <a href="{{ route('events.index') }}" @if(request()->routeIs('events.*')) aria-current="page" @endif>Événements</a>
-        <a href="/login">Connexion</a>
+        @guest
+            <a href="{{ route('login') }}">Connexion</a>
+            <a href="{{ route('register') }}">Créer un compte</a>
+        @endguest
         @auth
-            @if(auth()->user()->role === 'admin')<a href="{{ route('admin.events.index') }}">Administration</a>@endif
+            <a href="{{ route('registrations.index') }}">Mes inscriptions</a>
+            @if(auth()->user()->role === 'admin')
+                <a href="{{ route('admin.events.index') }}">Administration</a>
+            @endif
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit">Déconnexion</button>
+            </form>
         @endauth
     </nav>
     <a class="header-cta" href="{{ route('events.index') }}">Explorer les événements <span aria-hidden="true">↗</span></a>
