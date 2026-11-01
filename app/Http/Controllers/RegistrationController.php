@@ -46,16 +46,16 @@ class RegistrationController extends Controller
         });
 
         if ($result === 'already_registered') {
-            return redirect()->route('registrations.index')
+            return redirect()->route('events.show', $event)
                 ->with('error', 'Vous êtes déjà inscrit à cet événement.');
         }
 
         if ($result === 'full') {
-            return redirect()->route('registrations.index')
+            return redirect()->route('events.show', $event)
                 ->with('error', 'Cet événement affiche complet.');
         }
 
-        return redirect()->route('registrations.index')
+        return redirect()->route('events.show', $event)
             ->with('success', 'Votre inscription a bien été enregistrée.');
     }
 
@@ -66,9 +66,10 @@ class RegistrationController extends Controller
             403
         );
 
+        $event = $registration->event;
         $registration->delete();
 
-        return redirect()->route('registrations.index')
+        return redirect()->route('events.show', $event)
             ->with('success', 'Votre inscription a été annulée.');
     }
 }

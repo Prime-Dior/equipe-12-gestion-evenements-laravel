@@ -5,7 +5,7 @@
 @section('content')
 <h2>Se connecter</h2>
 
-<form method="POST" action="{{ route('login.store') }}">
+<form method="POST" action="{{ route('login.store') }}" style="display: flex; flex-direction: column; gap: 8px;">
     @csrf
 
     <label for="email">Adresse e-mail</label>

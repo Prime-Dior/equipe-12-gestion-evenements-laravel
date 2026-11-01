@@ -5,7 +5,7 @@
 @section('content')
 <h2>Créer un compte</h2>
 
-<form method="POST" action="{{ route('register.store') }}">
+<form method="POST" action="{{ route('register.store') }}" style="display: flex; flex-direction: column; gap: 8px;">
     @csrf
 
     <label for="name">Nom</label>
