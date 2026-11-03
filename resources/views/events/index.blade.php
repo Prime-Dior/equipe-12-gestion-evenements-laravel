@@ -3,22 +3,13 @@
 @section('title', 'Événements à venir')
 
 @section('content')
-<section class="hero">
-    <div class="hero-copy">
-        <p class="eyebrow">Événements au Bénin</p>
-        <h1>Des rencontres<br>à vivre ensemble.</h1>
-        <p>Parcourez les prochains ateliers, conférences et rendez-vous culturels.</p>
-        <a class="button button-light" href="#evenements">Voir les événements <span aria-hidden="true">↓</span></a>
-    </div>
-</section>
-
 <section class="content-section" id="evenements">
     <div class="section-heading">
         <div>
-            <p class="eyebrow">Calendrier</p>
-            <h2>Événements à venir</h2>
+            <p class="eyebrow">Eventia</p>
+            <h1>Événements à venir</h1>
         </div>
-        <p class="section-intro">Trouvez votre prochain rendez-vous.</p>
+        <p class="section-intro">Ateliers, conférences et rencontres près de chez vous.</p>
     </div>
 
     <form class="filter-bar" method="GET" action="{{ route('events.index') }}">

@@ -8,12 +8,6 @@
 
     <div class="detail-grid">
         <article class="detail-main">
-            <div class="event-art detail-art event-art-coral">
-                <span class="art-orbit art-orbit-one"></span>
-                <span class="art-orbit art-orbit-two"></span>
-                <span class="art-symbol">✳</span>
-                <span class="art-label">{{ $event->category->name }}</span>
-            </div>
             <p class="eyebrow detail-eyebrow">
                 {{ $event->category->name }} <span>·</span> {{ $event->date->translatedFormat('l d F Y') }}
             </p>
