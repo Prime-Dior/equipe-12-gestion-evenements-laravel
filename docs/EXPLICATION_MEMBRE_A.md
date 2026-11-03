@@ -6,9 +6,8 @@
 
 ## Pourquoi ce guide
 
-Ce document explique **ma contribution personnelle** telle qu’elle apparaît dans les commits attribués à `Prime-Dior` / `Prime Dior`. Il détaille les changements que j’ai faits dans le frontend, le backend des événements, les tests et la documentation. Il ne m’attribue pas le travail de mon binôme.
+Ce document présente ma participation personnelle au frontend, au backend des événements, aux tests et à la documentation, à partir des changements que j’ai réalisés.
 
-Le dépôt contient aussi des fonctionnalités réalisées par Afwane (authentification, inscriptions, API et Swagger). Elles sont intégrées à l’application finale, mais je les présente ici seulement pour situer les parties avec lesquelles mon code s’articule.
 
 ## Ma participation en bref
 
@@ -35,7 +34,6 @@ Ces contributions ont été faites après la date limite indiquée dans le sujet
 | `8314fc1` | Instructions d’utilisation de Swagger ajoutées au README. |
 | `4f05c59` | Ajustement des dépendances Composer pour PHP 8.4. |
 
-La mise à jour actuelle du guide est également un changement documentaire. Les commits de Ratel404 ne sont pas listés comme mes réalisations.
 
 ## 1. Frontend Blade que j’ai préparé
 
@@ -57,7 +55,7 @@ Les vues sont écrites avec Blade, le moteur de templates de Laravel. Le layout 
 
 Dans `routes/web.php`, j’ai relié les pages à des routes nommées. Une route `GET` affiche la liste ou la fiche. Au stade de la maquette, les routes d’écriture retournaient explicitement un message indiquant qu’aucune modification n’était enregistrée. Cette étape rendait les formulaires prévisualisables sans faire croire qu’ils persistaient déjà les données.
 
-Ensuite, dans `9903a49`, j’ai relié la liste, le détail et les pages d’administration au vrai contrôleur et à la base. L’application finale contient aussi les routes d’authentification et d’inscription ajoutées par Ratel404. Il faut séparer les routes de démonstration initiales de celles qui exécutent aujourd’hui les opérations métier.
+Ensuite, dans `9903a49`, j’ai relié la liste, le détail et les pages d’administration au vrai contrôleur et à la base.
 
 ### Présentation visuelle
 
@@ -80,7 +78,7 @@ J’ai aussi ajouté le champ `role` à la table des utilisateurs avec `user` co
 Dans `app/Models/Event.php`, j’ai défini les attributs remplissables, les conversions de types et les relations. Le cast `date => datetime` permet de manipuler la date comme un objet Carbon; `capacity => integer` garantit un entier côté application.
 
 - `category()` retourne `belongsTo(Category::class)` : l’événement porte la clé étrangère de la catégorie.
-- `registrations()` retourne `hasMany(Registration::class)` : plusieurs inscriptions peuvent concerner un événement. Le modèle Registration et son flux ont été complétés par mon binôme.
+- `registrations()` retourne `hasMany(Registration::class)` : plusieurs inscriptions peuvent concerner un événement.
 - `scopeUpcoming()` ajoute le filtre des dates futures à une requête.
 - `places_remaining` calcule la capacité moins le nombre d’inscriptions; le résultat n’est pas stocké comme compteur indépendant.
 - `isPast()` et `isFull()` centralisent deux questions réutilisées par les pages et la logique applicative.
@@ -127,9 +125,7 @@ J’ai préparé des factories pour créer des événements/catégories pendant 
 
 ## 3. Mon changement dans le flux d’inscription
 
-Le contrôleur complet d’inscription et la majeure partie du parcours utilisateur ont été développés par Afwane. Ma contribution ciblée dans `124f610` est la règle qui refuse l’inscription quand l’événement est déjà passé, plus le test qui prouve qu’aucune ligne n’est créée.
-
-Dans `RegistrationController::store`, cette vérification est placée dans la transaction, après le rechargement et le verrouillage de la ligne événement :
+Dans `RegistrationController::store`, j’ai ajouté la vérification qui refuse une inscription lorsque l’événement est déjà passé. Elle s’exécute dans la transaction, après le rechargement et le verrouillage de la ligne événement :
 
 ```php
 $event = Event::query()
@@ -163,16 +159,10 @@ Au dernier état vérifié avant cette mise à jour, la suite entière donnait *
 ## 5. Documentation et configuration auxquelles j’ai contribué
 
 - Dans `151eeb1` et `9eb799c`, j’ai documenté le projet, le module événements et la démonstration.
-- Dans `8314fc1`, j’ai ajouté au README les deux commandes permettant de générer Swagger et de lancer Laravel, puis l’adresse de Swagger UI. La documentation technique Swagger elle-même et ses annotations API sont le travail de Ratel404.
+- Dans `8314fc1`, j’ai ajouté au README les deux commandes permettant de générer Swagger et de lancer Laravel, puis l’adresse de Swagger UI.
 - Dans `9eb799c`, j’ai changé la connexion Laravel par défaut de SQLite à MySQL, conformément à la contrainte du projet. `DB_CONNECTION` de `.env` reste la configuration locale à vérifier.
 - Dans `4f05c59`, j’ai ajusté la contrainte PHP et `composer.lock` pour rendre l’installation cohérente avec PHP 8.4. Les vérifications `composer install`, `composer check-platform-reqs` et `composer validate` ont réussi dans l’environnement utilisé.
 - J’ai ajouté le générateur PDF du guide et l’exclusion Git du PDF. Le fichier PDF personnel est livré dans Téléchargements et n’est pas versionné.
-
-## 6. Ce que mon binôme a fait — pour bien délimiter ma part
-
-Afwane SOULEYMANE (`Ratel404`) a principalement créé le parcours d’authentification et d’inscription : configuration Fortify, écrans et traitements de connexion/inscription/déconnexion, contrôleur et modèle Registration, migration associée, espace « mes inscriptions », annulation et plusieurs tests. Il a également préparé l’API `/api/v1`, Sanctum, les contrôleurs API et la documentation Swagger. Ses commits et la fusion de la PR #3 sont visibles dans l’historique Git.
-
-Ces fonctionnalités utilisent les modèles, routes ou vues de l’ensemble du projet, mais ne doivent pas être présentées comme mes réalisations individuelles. Ma propre partie backend principale est la gestion des catégories/événements et leur administration, ainsi que le contrôle ciblé des événements passés dans le flux d’inscription.
 
 ## 7. Parcours de présentation de ma participation
 
@@ -182,7 +172,6 @@ Ces fonctionnalités utilisent les modèles, routes ou vues de l’ensemble du p
 4. **Ouvrir `Event.php`** : expliquer `belongsTo`, `hasMany`, le cast date et le calcul des places restantes.
 5. **Ouvrir la migration** : expliquer la clé étrangère, puis lancer `php artisan migrate:status` pour montrer l’état des migrations locales.
 6. **Montrer le test de recherche ou celui de date passée** : lire la préparation, la requête envoyée et les assertions.
-7. **Montrer Swagger brièvement en attribuant sa création à Afwane**; expliquer que ma contribution est la documentation d’utilisation ajoutée au README.
 
 Les tests exécutés et vérifications documentés ont été réalisés après la date limite officielle. Ne pas présenter leurs dates comme antérieures au rendu.
 
@@ -196,9 +185,7 @@ Les tests exécutés et vérifications documentés ont été réalisés après l
 
 **Que garantit une migration ?** Elle décrit une évolution reproductible du schéma SQL et permet à chaque membre de préparer la même structure avec Artisan.
 
-**Quel changement est précisément ma contribution à l’inscription ?** Le refus lorsqu’un événement est passé, ajouté dans la transaction déjà présente, et son test de régression. La logique générale d’inscription/annulation est principalement attribuée à mon binôme.
-
-**Qui a créé l’API et la documentation interactive ?** Ratel404 a développé les endpoints et leur documentation Swagger. J’ai ajouté au README les instructions pour les lancer et m’en servir.
+**Quel changement est précisément ma contribution à l’inscription ?** Le refus lorsqu’un événement est passé, ajouté dans la transaction déjà présente, et son test de régression.
 
 ## Commandes utiles pour revoir mes contributions
 
