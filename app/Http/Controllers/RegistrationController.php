@@ -28,6 +28,10 @@ class RegistrationController extends Controller
                 ->lockForUpdate()
                 ->firstOrFail();
 
+            if ($event->isPast()) {
+                return 'past';
+            }
+
             if ($event->registrations()
                 ->where('user_id', $request->user()->getKey())
                 ->exists()) {
@@ -53,6 +57,11 @@ class RegistrationController extends Controller
         if ($result === 'full') {
             return redirect()->route('events.show', $event)
                 ->with('error', 'Cet événement affiche complet.');
+        }
+
+        if ($result === 'past') {
+            return redirect()->route('events.show', $event)
+                ->with('error', 'Les inscriptions sont closes car cet événement est passé.');
         }
 
         return redirect()->route('events.show', $event)

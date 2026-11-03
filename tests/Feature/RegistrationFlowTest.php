@@ -68,6 +68,20 @@ class RegistrationFlowTest extends TestCase
         $this->assertDatabaseCount('registrations', 1);
     }
 
+    public function test_a_user_cannot_register_for_an_event_that_has_already_passed(): void
+    {
+        $event = $this->createEvent();
+        $event->update(['date' => now()->subDay()]);
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->post(route('registrations.store', $event))
+            ->assertRedirect(route('events.show', $event))
+            ->assertSessionHas('error', 'Les inscriptions sont closes car cet événement est passé.');
+
+        $this->assertDatabaseCount('registrations', 0);
+    }
+
     private function createEvent(int $capacity = 10): Event
     {
         $category = Category::create(['name' => 'Atelier']);
