@@ -22,7 +22,7 @@ Application Laravel de gestion d’événements et d’inscriptions, réalisée 
 
 ## Technologies et prérequis
 
-Laravel 13, PHP 8.4.1 ou supérieur avec `pdo_mysql`, Composer, MySQL 8, Fortify, Sanctum, L5-Swagger et PHPUnit. Le frontend web utilise Blade et CSS dans le même projet Laravel. Le verrou Composer actuel contient des composants Symfony qui exigent PHP 8.4.1 minimum.
+Laravel 13, PHP 8.4.0 ou supérieur avec `pdo_mysql`, Composer, MySQL 8, Fortify, Sanctum, L5-Swagger et PHPUnit. Le frontend web utilise Blade et CSS dans le même projet Laravel. Le projet fixe maintenant cette version minimale dans `composer.json` afin que les dépendances restent compatibles.
 
 ## Installation
 
