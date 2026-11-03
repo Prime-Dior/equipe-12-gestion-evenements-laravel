@@ -1,14 +1,13 @@
-# Déroulé de démonstration (5 à 7 minutes)
+# Déroulé de soutenance (5 à 7 minutes)
 
-Ce parcours présente ce qui existe réellement sur `feature/events-admin`. Le module des inscriptions reste à réaliser par le membre B.
+Le guide complet, avec explications du code, des migrations, des requêtes, des tests et des contributions, se trouve dans [`docs/EXPLICATION_MEMBRE_A.md`](docs/EXPLICATION_MEMBRE_A.md).
 
-1. **Liste publique (1 min)** — ouvrir `/events`, chercher un titre et filtrer par catégorie/date. Expliquer que le contrôleur valide les paramètres, compose une requête Eloquent et conserve les filtres dans la pagination.
-2. **Détail (45 s)** — ouvrir une fiche. Montrer catégorie, lieu, date, capacité et places restantes. Préciser que l’inscription participant n’est pas encore câblée.
-3. **Administration (1 min)** — se connecter avec un compte dont `role` vaut `admin`, puis ouvrir `/admin/events`. Présenter le formulaire, les erreurs de validation, la mise à jour et la suppression protégée. Il n’existe pas encore de compte de démonstration fourni ; ne pas inventer d’identifiants.
-4. **Modèle de données (1 min)** — expliquer `Category hasMany Event` et `Event belongsTo Category`. La clé étrangère et les index sont définis par les migrations. Le membre B ajoutera `Registration` et ses contraintes.
-5. **Règle métier et tests (1 min)** — expliquer la validation du serveur, la protection `auth` et `can:manage-events`, et montrer `tests/Feature/EventsManagementTest.php`. Le nombre de places est calculé à partir des inscriptions dès que leur table existe ; le contrôle transactionnel simultané devra être ajouté au parcours d’inscription.
-6. **Modification en direct (1 min)** — modifier un libellé Blade ou un événement du seeder, relancer le seeder si nécessaire, puis recharger. Expliquer la différence entre une vue et les données persistées dans MySQL.
+1. **Liste et filtres (1 min)** — ouvrir `/events`, rechercher un titre, choisir une catégorie et une date. Expliquer que `EventController::index` valide les paramètres et compose une requête Eloquent côté serveur.
+2. **Détail et inscription (1 min)** — ouvrir un événement. Montrer date, lieu, places et états. Avec un compte utilisateur, s’inscrire puis ouvrir `/registrations`.
+3. **Annulation (45 s)** — annuler l’inscription et expliquer que le contrôleur vérifie qu’elle appartient à l’utilisateur connecté avant de la supprimer.
+4. **Administration (1 min)** — avec un compte préparé ayant le rôle admin, créer ou modifier un événement. Expliquer `auth`, `can:manage-events` et le Gate. Le dépôt ne fournit pas de mot de passe d’administrateur de démonstration.
+5. **Architecture (1 min)** — suivre une route vers le contrôleur, le modèle Eloquent et la vue Blade ; présenter `Category hasMany Event` et `Event belongsTo Category`.
+6. **Base et test (1 min)** — expliquer migrations, clé étrangère, unicité `(user_id, event_id)` et verrou `lockForUpdate()`. Montrer le test qui refuse une inscription à un événement passé.
+7. **Petite modification (30 s)** — modifier un libellé Blade puis recharger, ou ajuster un événement du seeder et le réexécuter.
 
-Pour préparer la démo, installer le projet, configurer MySQL, exécuter les migrations et le seeder. Vérifier que les pages d’authentification du membre B sont intégrées avant de présenter l’accès administrateur.
-
-Questions à préparer : à quoi sert le binding `{event}` ? Pourquoi séparer migration et modèle ? Que fait `withQueryString()` ? Pourquoi un rôle admin doit être vérifié côté serveur ? Comment protéger une capacité lorsqu’on inscrit deux personnes simultanément ?
+La dernière suite PHPUnit exécutée a réussi avec 12 tests et 59 assertions. La correction de la règle des événements passés et les derniers changements documentaires sont postérieurs à l’échéance annoncée du 2 novembre 2026.
