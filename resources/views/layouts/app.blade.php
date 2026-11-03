@@ -36,10 +36,6 @@
     @if($errors->any())<div class="flash flash-error" role="alert"><strong>Vérifiez les informations saisies.</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
     @yield('content')
 </main>
-<footer class="site-footer">
-    <a class="brand footer-brand" href="{{ route('events.index') }}"><span class="brand-mark">e</span>eventia<span class="brand-period">.</span></a>
-    <p>Les bonnes idées méritent une salle pleine.</p>
-    <span>Projet d’initiation aux frameworks · IFRI-UAC · GL3 · Équipe 12</span>
-</footer>
+
 </body>
 </html>

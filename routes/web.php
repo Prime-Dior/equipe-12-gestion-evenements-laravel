@@ -45,4 +45,6 @@ Route::prefix('admin/events')
         Route::get('/{event}/edit', 'edit')->name('edit');
         Route::put('/{event}', 'update')->name('update');
         Route::delete('/{event}', 'destroy')->name('destroy');
+       
     });
+Route::redirect('/admin', '/admin/events');
