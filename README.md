@@ -5,7 +5,7 @@ Application web Laravel de gestion d’événements et d’inscriptions
 - **Équipe :** 12
 - **Enseignante :** GAHOU Maryse
 - **Sujet :** B — Gestion des événements et inscriptions
-- **Membres :** Afwane SOULEYMANE et Primael KPATINDE
+- **Membres :** Afwane SOULEYMANE (Ratel404) et Primael KPATINDE (Prime-Dior)
 - **Base de données :** MySQL 8
 
 ## Fonctionnalités
@@ -52,6 +52,10 @@ php artisan serve
 ```
 
 Ouvrir l’adresse affichée par la commande `php artisan serve`
+
+Generer la documentation Swagger avec 'php artisan l5-swagger:generate'
+Visualiser la documentation sur http://127.0.0.1:8000/api/documentation
+
 
 ## Structure du code
 
