@@ -32,7 +32,10 @@ L’historique Git permet de dire honnêtement qui a apporté quoi. Les commits 
 - `9903a49` — développe les catégories et événements, leur CRUD, les filtres, les migrations, les seeders et les tests de cette partie.
 - `151eeb1` — documente le module événements et son parcours de démonstration.
 - `7d01788` — simplifie l’affichage des pages publiques d’événement.
-- Le commit qui accompagne la présente correction ajoute le refus d’inscription aux événements passés, son test, le guide complet et le choix MySQL par défaut. Ces changements ont été préparés après la date limite annoncée.
+- `124f610` — refuse les inscriptions aux événements passés et ajoute le test associé.
+- `9eb799c` — rédige le premier guide de soutenance.
+- `8314fc1` — documente les commandes Swagger dans le README.
+- `4f05c59` — aligne les dépendances Composer sur PHP 8.4. Ces derniers changements ont été préparés après la date limite annoncée.
 
 Le travail de Member A se trouve principalement dans `EventController`, `Category`, `Event`, les vues d’événement et d’administration, leurs migrations et factories/seeders, ainsi que `EventsManagementTest`.
 
@@ -255,3 +258,79 @@ Ne pas improviser un mot de passe admin ni prétendre que les tests vérifient d
 - [Pessimistic locking](https://laravel.com/docs/13.x/queries#pessimistic-locking)
 - [Authorization](https://laravel.com/docs/13.x/authorization)
 - [HTTP tests](https://laravel.com/docs/13.x/http-tests)
+
+## 16. API REST et Swagger
+
+Eventia propose deux interfaces dans le même projet Laravel : les pages web Blade, qui renvoient du HTML, et une API versionnée, qui renvoie du JSON. Les routes API sont déclarées dans `routes/api.php` sous le préfixe `v1`, par exemple `/api/v1/events`. La version facilite l’évolution future du contrat sans modifier immédiatement les clients existants.
+
+| Méthode et URL | Accès | Fonction |
+| --- | --- | --- |
+| `POST /api/v1/auth/register` | Public | Créer un compte |
+| `POST /api/v1/auth/login` | Public, limité à 5 essais par minute | Se connecter et recevoir un jeton Sanctum |
+| `GET /api/v1/auth/me`, `POST /api/v1/auth/logout` | Jeton Sanctum | Consulter le compte ou révoquer le jeton courant |
+| `GET /api/v1/events`, `GET /api/v1/events/{event}` | Public | Lister ou consulter un événement |
+| `POST /api/v1/events`, `PUT /api/v1/events/{event}`, `DELETE /api/v1/events/{event}` | Administrateur authentifié | Gérer les événements |
+| `GET/POST /api/v1/registrations` | Jeton Sanctum | Consulter ses inscriptions ou demander une inscription |
+| `GET/DELETE /api/v1/registrations/{registration}` | Jeton Sanctum | Consulter ou annuler une inscription autorisée |
+
+Le middleware `auth:sanctum` exige une identité authentifiée. `can:manage-events` ajoute le contrôle du rôle administrateur aux routes de gestion. Le client transmet le jeton dans l’en-tête `Authorization: Bearer <jeton>`. Ce jeton ne doit pas être partagé ni committé.
+
+Les contrôleurs API sont dans `app/Http/Controllers/Api/V1/`. Ils renvoient des réponses JSON adaptées aux clients HTTP. Ils coexistent avec les contrôleurs web : les deux interfaces font partie de Laravel, mais produisent des formats de réponse différents.
+
+L’historique attribue la mise en place de l’API, de Sanctum et de Swagger à Afwane SOULEYMANE (Ratel404), notamment le commit `b98e5e1`. La PR #3 a intégré cette branche dans `main`. Ma contribution à cette partie est l’ajout des instructions Swagger au README (`8314fc1`) et l’alignement de Composer avec PHP 8.4 (`4f05c59`), sans modifier le travail API de mon binôme.
+
+### Générer et utiliser Swagger UI
+
+Depuis la racine du projet, après `composer install` et la configuration de `.env` :
+
+```powershell
+php artisan l5-swagger:generate
+php artisan serve
+```
+
+Ouvrir `http://127.0.0.1:8000/api/documentation`. La première commande génère le document OpenAPI à partir des attributs PHP présents dans `app/OpenApi/ApiSpec.php` et les contrôleurs API. Swagger UI lit ce document pour présenter les routes, paramètres, réponses et schémas. La spécification générée se trouve sous `storage/api-docs/`; les attributs PHP versionnés restent sa source.
+
+Les routes publiques peuvent être essayées directement. Pour les routes protégées, appeler d’abord l’endpoint de connexion, puis saisir le jeton obtenu dans **Authorize**. `401` correspond généralement à une authentification absente ou invalide, `403` à une identité sans autorisation suffisante, et `422` à des données refusées par la validation.
+
+`php artisan route:list --path=api` permet de voir les routes réellement chargées avec leurs contrôleurs et middleware. Swagger facilite les essais manuels, mais ne remplace pas les tests automatisés.
+
+## 17. Dépendances et compatibilité PHP
+
+`composer.json` déclare les paquets et les versions de PHP compatibles; `composer.lock` fixe les versions installées. Le commit `4f05c59` aligne la contrainte PHP du projet sur l’environnement PHP 8.4 et actualise le verrouillage nécessaire. J’ai vérifié l’installation et la cohérence avec :
+
+```powershell
+composer install
+composer check-platform-reqs
+composer validate
+```
+
+Ces commandes ont réussi avec PHP 8.4.0 et les extensions requises. Elles confirment respectivement que les dépendances peuvent être installées, que la plateforme dispose des prérequis et que les fichiers Composer sont cohérents. Elles ne remplacent pas les tests fonctionnels.
+
+## 18. État du dépôt et vérifications
+
+Avant cette mise à jour documentaire, la branche locale `main` était alignée avec `origin/main` sur le commit de fusion `2be2d82` (PR #3), avec un arbre de travail propre. La version principale contient donc le travail API de Ratel404 et les changements de compatibilité Composer de Prime-Dior.
+
+Les vérifications réalisées sur le projet comprennent 12 tests PHPUnit réussis avec 59 assertions, la génération de Swagger, une réponse HTTP 200 pour Swagger UI et une réponse HTTP 200 pour la liste publique des événements. Cela ne signifie pas qu’un test de charge ou une simulation de plusieurs inscriptions simultanées a été effectué.
+
+Le compte administrateur discuté dans nos échanges est configuré dans la base locale de démonstration. Il n’est pas fourni par un seeder versionné; ses identifiants sont omis de ce guide. Les mots de passe, jetons et secrets restent dans l’environnement local.
+
+À retenir pour expliquer le projet :
+
+1. Blade et l’API sont deux interfaces du même Laravel : HTML d’un côté, JSON de l’autre.
+2. Les routes dirigent les requêtes et les middleware contrôlent l’accès.
+3. Eloquent relie les modèles aux tables; les migrations décrivent le schéma MySQL reproductible.
+4. La validation explique les erreurs à l’utilisateur; les contraintes SQL protègent aussi l’intégrité des données.
+5. Les tests vérifient des scénarios reproductibles; Swagger documente et facilite l’essai manuel des endpoints.
+
+## 19. Références
+
+- [Laravel Routing](https://laravel.com/docs/13.x/routing)
+- [Eloquent relationships](https://laravel.com/docs/13.x/eloquent-relationships)
+- [Validation](https://laravel.com/docs/13.x/validation)
+- [Transactions et verrouillage](https://laravel.com/docs/13.x/database#database-transactions)
+- [Authorization](https://laravel.com/docs/13.x/authorization)
+- [HTTP tests](https://laravel.com/docs/13.x/http-tests)
+- [Laravel Sanctum](https://laravel.com/docs/13.x/sanctum)
+- [Laravel Fortify](https://laravel.com/docs/13.x/fortify)
+- [L5-Swagger](https://github.com/DarkaOnLine/L5-Swagger)
+- [Spécification OpenAPI](https://spec.openapis.org/oas/latest.html)
